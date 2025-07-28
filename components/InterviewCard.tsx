@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import { Button } from "./ui/button";
 import DisplayTechIcons from "./DisplayTechIcons";
+import TiltedCard from "./ui/TiltedCard";
 
 import { cn, getRandomInterviewCover } from "@/lib/utils";
 import { getFeedbackByInterviewId } from "@/lib/actions/general.action";
@@ -37,10 +38,24 @@ const InterviewCard = async ({
     feedback?.createdAt || createdAt || Date.now()
   ).format("MMM D, YYYY");
 
+  const image = getRandomInterviewCover();
+
   return (
-    <div className="card-border w-[360px] max-sm:w-full min-h-96">
-      <div className="card-interview">
-        <div>
+    <TiltedCard
+      imageSrc={image}
+      altText={`${role} Interview`}
+      captionText={`${role} - ${normalizedType}`}
+      containerHeight="400px"
+      containerWidth="360px"
+      imageHeight="400px"
+      imageWidth="360px"
+      rotateAmplitude={10}
+      scaleOnHover={1.08}
+      showMobileWarning={false}
+      showTooltip={false}
+      displayOverlayContent={true}
+      overlayContent={
+        <div className="card-interview -space-y-6.5 p-4 w-full bg-white rounded-[15px] shadow-md">
           {/* Type Badge */}
           <div
             className={cn(
@@ -48,12 +63,12 @@ const InterviewCard = async ({
               badgeColor
             )}
           >
-            <p className="badge-text ">{normalizedType}</p>
+            <p className="badge-text">{normalizedType}</p>
           </div>
 
           {/* Cover Image */}
           <Image
-            src={getRandomInterviewCover()}
+            src={image}
             alt="cover-image"
             width={90}
             height={90}
@@ -61,7 +76,7 @@ const InterviewCard = async ({
           />
 
           {/* Interview Role */}
-          <h3 className="mt-5 capitalize">{role} Interview</h3>
+          <h3 className="mt-2 capitalize">{role} Interview</h3>
 
           {/* Date & Score */}
           <div className="flex flex-row gap-5 mt-3">
@@ -82,29 +97,28 @@ const InterviewCard = async ({
           </div>
 
           {/* Feedback or Placeholder Text */}
-          <p className="line-clamp-2 mt-5">
+          <p className="line-clamp-2 mt-5 text-sm">
             {feedback?.finalAssessment ||
               "You haven't taken this interview yet. Take it now to improve your skills."}
           </p>
-        </div>
 
-        <div className="flex flex-row justify-between">
-          <DisplayTechIcons techStack={techstack} />
-
-          <Button className="btn-primary">
-            <Link
-              href={
-                feedback
-                  ? `/interview/${interviewId}/feedback`
-                  : `/interview/${interviewId}`
-              }
-            >
-              {feedback ? "Check Feedback" : "View Interview"}
-            </Link>
-          </Button>
+          <div className="flex flex-row justify-between mt-5">
+            <DisplayTechIcons techStack={techstack} />
+            <Button className="btn-primary">
+              <Link
+                href={
+                  feedback
+                    ? `/interview/${interviewId}/feedback`
+                    : `/interview/${interviewId}`
+                }
+              >
+                {feedback ? "Check Feedback" : "View Interview"}
+              </Link>
+            </Button>
+          </div>
         </div>
-      </div>
-    </div>
+      }
+    />
   );
 };
 

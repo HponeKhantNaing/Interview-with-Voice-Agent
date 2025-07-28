@@ -33,7 +33,9 @@ async function Home() {
         />
 
         <div className="flex flex-col gap-6 max-w-lg">
-          <h2>Start Interview with AI-Powered Practice and Feedback</h2>
+          <p className="text-4xl font-bold">
+            Start Interview with AI-Powered Practice and Feedback
+          </p>
           <p className="text-lg">
             Practice real interview questions and get instant feedback
           </p>

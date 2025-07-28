@@ -13,7 +13,7 @@
   --color-primary-100: #dddfff;
   --color-primary-200: #cac5fe;
 
-  --color-light-100: #d6e0ff;
+  --color-light-100: ##d6e0ff;
   --color-light-400: #6870a6;
   --color-light-600: #4f557d;
   --color-light-800: #24273a;
@@ -29,72 +29,43 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Theme variables will be set dynamically by the theme manager */
+  --background: #020408;
+  --foreground: #ffffff;
+  --card: #1a1c20;
+  --card-foreground: #ffffff;
+  --popover: #1a1c20;
+  --popover-foreground: #ffffff;
+  --primary: #cac5fe;
+  --primary-foreground: #020408;
+  --secondary: #27282f;
+  --secondary-foreground: #ffffff;
+  --muted: #27282f;
+  --muted-foreground: #d6e0ff;
+  --accent: #27282f;
+  --accent-foreground: #ffffff;
+  --destructive: #f75353;
+  --destructive-foreground: #ffffff;
+  --border: #4b4d4f;
+  --input: #27282f;
+  --ring: #cac5fe;
+  --success: #49de50;
+  --success-foreground: #020408;
+  --warning: #ffa500;
+  --warning-foreground: #020408;
+  --info: #3b82f6;
+  --info-foreground: #ffffff;
+  --sidebar: #1a1c20;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #cac5fe;
+  --sidebar-primary-foreground: #020408;
+  --sidebar-accent: #27282f;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #4b4d4f;
+  --sidebar-ring: #cac5fe;
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: var(--light-100);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-}
+/* Dark mode styles removed - now handled by theme manager */
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -266,11 +237,13 @@
   }
 
   .card-cta {
-    @apply flex flex-row bg-gradient-to-r from-black to-black rounded-3xl px-16 py-6 items-center justify-between max-sm:px-4;
+    @apply flex flex-row rounded-3xl px-16 py-6 items-center justify-between max-sm:px-4;
+    background: var(--cardCtaBg);
+    box-shadow: var(--cardCtaShadow);
   }
 
   .interviews-section {
-    @apply flex flex-wrap gap-4 max-lg:flex-col w-full items-stretch;
+    @apply flex flex-wrap gap-8 max-lg:flex-col w-full items-stretch;
   }
 
   .interview-text {
@@ -286,7 +259,9 @@
   }
 
   .card-interview {
-    @apply dark-gradient rounded-2xl min-h-full flex flex-col p-6 relative overflow-hidden gap-10 justify-between;
+    @apply rounded-2xl min-h-full flex flex-col p-6 relative overflow-hidden gap-10 justify-between;
+    background: var(--cardInterviewBg);
+    box-shadow: var(--cardInterviewShadow);
 
     .badge-text {
       @apply text-sm font-semibold capitalize;
