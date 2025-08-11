@@ -1,23 +1,18 @@
 import themes from "../constants/themes.json";
 import React from "react";
 
-export type ThemeMode = "dark" | "white";
-export type Theme = typeof themes.dark;
+export type ThemeMode = "light";
+export type Theme = typeof themes.light;
 
-// Theme context and management
+// Theme context and management - Light mode only
 export class ThemeManager {
   private static instance: ThemeManager;
-  private currentTheme: ThemeMode = "dark";
+  private currentTheme: ThemeMode = "light";
   private listeners: Set<(theme: ThemeMode) => void> = new Set();
 
   private constructor() {
-    // Initialize theme from localStorage if available
-    if (typeof window !== "undefined") {
-      const savedTheme = localStorage.getItem("theme") as ThemeMode;
-      if (savedTheme && (savedTheme === "dark" || savedTheme === "white")) {
-        this.currentTheme = savedTheme;
-      }
-    }
+    // Always initialize with light theme
+    this.currentTheme = "light";
   }
 
   static getInstance(): ThemeManager {
@@ -36,14 +31,12 @@ export class ThemeManager {
   }
 
   setTheme(theme: ThemeMode): void {
+    // Only allow light theme
+    if (theme !== "light") return;
+
     if (this.currentTheme === theme) return;
 
     this.currentTheme = theme;
-
-    // Save to localStorage
-    if (typeof window !== "undefined") {
-      localStorage.setItem("theme", theme);
-    }
 
     // Apply theme to document
     this.applyTheme();
@@ -53,7 +46,8 @@ export class ThemeManager {
   }
 
   toggleTheme(): void {
-    this.setTheme(this.currentTheme === "dark" ? "white" : "dark");
+    // No toggle functionality - always light mode
+    return;
   }
 
   subscribe(listener: (theme: ThemeMode) => void): () => void {
@@ -81,6 +75,10 @@ export class ThemeManager {
         root.style.setProperty(`--${key}`, value as string);
       }
     });
+
+    // Set theme class on body
+    document.body.className = document.body.className.replace(/theme-\w+/g, "");
+    document.body.classList.add(`theme-light`);
   }
 
   // Initialize theme on mount
@@ -93,7 +91,7 @@ export class ThemeManager {
 export const themeManager = ThemeManager.getInstance();
 
 // Utility functions
-export function getThemeColors(theme: ThemeMode = "dark"): Theme {
+export function getThemeColors(theme: ThemeMode = "light"): Theme {
   return themes[theme];
 }
 

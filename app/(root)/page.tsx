@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import InterviewCard from "@/components/InterviewCard";
@@ -10,22 +13,67 @@ import {
   getLatestInterviews,
 } from "@/lib/actions/general.action";
 
-async function Home() {
-  const user = await getCurrentUser();
+function Home() {
+  const [user, setUser] = useState<any>(null);
+  const [userInterviews, setUserInterviews] = useState<Interview[] | null>(
+    null
+  );
+  const [allInterview, setAllInterview] = useState<Interview[] | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const [userInterviews, allInterview] = await Promise.all([
-    getInterviewsByUserId(user?.id!),
-    getLatestInterviews({ userId: user?.id! }),
-  ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
+
+        if (currentUser?.id) {
+          const [userInterviewsData, allInterviewData] = await Promise.all([
+            getInterviewsByUserId(currentUser.id),
+            getLatestInterviews({ userId: currentUser.id }),
+          ]);
+          setUserInterviews(userInterviewsData);
+          setAllInterview(allInterviewData);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleDeleteInterview = (interviewId: string) => {
+    // Remove from userInterviews
+    setUserInterviews(
+      (prev) =>
+        prev?.filter((interview) => interview.id !== interviewId) || null
+    );
+    // Remove from allInterview
+    setAllInterview(
+      (prev) =>
+        prev?.filter((interview) => interview.id !== interviewId) || null
+    );
+  };
 
   const hasPastInterviews = userInterviews?.length! > 0;
   const hasUpcomingInterviews = allInterview?.length! > 0;
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <>
       <section className="card-cta">
         <Image
-          src="/anade Background Removed.png"
+          src="/imageR.png"
           alt="robo-dude"
           width={400}
           height={400}
@@ -60,6 +108,7 @@ async function Home() {
                 type={interview.type}
                 techstack={interview.techstack}
                 createdAt={interview.createdAt}
+                onDelete={() => handleDeleteInterview(interview.id)}
               />
             ))
           ) : (
@@ -82,6 +131,7 @@ async function Home() {
                 type={interview.type}
                 techstack={interview.techstack}
                 createdAt={interview.createdAt}
+                onDelete={() => handleDeleteInterview(interview.id)}
               />
             ))
           ) : (

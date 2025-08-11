@@ -1,14 +1,8 @@
 import { Toaster } from "sonner";
 import type { Metadata } from "next";
-import { Mona_Sans } from "next/font/google";
 import ThemeProvider from "../components/ThemeProvider";
 
 import "./globals.css";
-
-const monaSans = Mona_Sans({
-  variable: "--font-mona-sans",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Key2Carrer",
@@ -22,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${monaSans.className} antialiased pattern`}>
+      <body className="antialiased">
         <ThemeProvider>
           {children}
           <Toaster />

@@ -9,6 +9,13 @@ import { feedbackSchema } from "@/constants";
 export async function createFeedback(params: CreateFeedbackParams) {
   const { interviewId, userId, transcript, feedbackId } = params;
 
+  console.log("createFeedback called with params:", {
+    interviewId,
+    userId,
+    feedbackId,
+    transcriptLength: transcript.length,
+  });
+
   try {
     const formattedTranscript = transcript
       .map(
@@ -16,6 +23,8 @@ export async function createFeedback(params: CreateFeedbackParams) {
           `- ${sentence.role}: ${sentence.content}\n`
       )
       .join("");
+
+    console.log("Formatted transcript:", formattedTranscript);
 
     const { object } = await generateObject({
       model: google("gemini-2.0-flash-001", {
@@ -30,13 +39,15 @@ export async function createFeedback(params: CreateFeedbackParams) {
         Please score the candidate from 0 to 100 in the following areas. Do not add categories other than the ones provided:
         - **Communication Skills**: Clarity, articulation, structured responses.
         - **Technical Knowledge**: Understanding of key concepts for the role.
-        - **Problem-Solving**: Ability to analyze problems and propose solutions.
-        - **Cultural & Role Fit**: Alignment with company values and job role.
-        - **Confidence & Clarity**: Confidence in responses, engagement, and clarity.
+        - **Problem Solving**: Ability to analyze problems and propose solutions.
+        - **Cultural Fit**: Alignment with company values and job role.
+        - **Confidence and Clarity**: Confidence in responses, engagement, and clarity.
         `,
       system:
         "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories",
     });
+
+    console.log("AI generated object:", object);
 
     const feedback = {
       interviewId: interviewId,
@@ -49,6 +60,8 @@ export async function createFeedback(params: CreateFeedbackParams) {
       createdAt: new Date().toISOString(),
     };
 
+    console.log("Feedback object to save:", feedback);
+
     let feedbackRef;
 
     if (feedbackId) {
@@ -58,11 +71,20 @@ export async function createFeedback(params: CreateFeedbackParams) {
     }
 
     await feedbackRef.set(feedback);
+    console.log("Feedback saved successfully with ID:", feedbackRef.id);
 
     return { success: true, feedbackId: feedbackRef.id };
   } catch (error) {
-    console.error("Error saving feedback:", error);
-    return { success: false };
+    console.error("Error in createFeedback:", error);
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : "No stack trace",
+      name: error instanceof Error ? error.name : "Unknown error type",
+    });
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 }
 
@@ -76,6 +98,11 @@ export async function getFeedbackByInterviewId(
   params: GetFeedbackByInterviewIdParams
 ): Promise<Feedback | null> {
   const { interviewId, userId } = params;
+
+  // Return null if userId is undefined
+  if (!userId) {
+    return null;
+  }
 
   const querySnapshot = await db
     .collection("feedback")
@@ -95,6 +122,11 @@ export async function getLatestInterviews(
 ): Promise<Interview[] | null> {
   const { userId, limit = 20 } = params;
 
+  // Return null if userId is undefined
+  if (!userId) {
+    return null;
+  }
+
   const interviews = await db
     .collection("interviews")
     .orderBy("createdAt", "desc")
@@ -112,6 +144,11 @@ export async function getLatestInterviews(
 export async function getInterviewsByUserId(
   userId: string
 ): Promise<Interview[] | null> {
+  // Return null if userId is undefined or empty
+  if (!userId) {
+    return null;
+  }
+
   const interviews = await db
     .collection("interviews")
     .where("userId", "==", userId)
@@ -122,4 +159,30 @@ export async function getInterviewsByUserId(
     id: doc.id,
     ...doc.data(),
   })) as Interview[];
+}
+
+export async function deleteInterview(
+  interviewId: string
+): Promise<{ success: boolean }> {
+  try {
+    // Delete the interview
+    await db.collection("interviews").doc(interviewId).delete();
+
+    // Delete associated feedback
+    const feedbackQuerySnapshot = await db
+      .collection("feedback")
+      .where("interviewId", "==", interviewId)
+      .get();
+
+    // Delete all feedback documents for this interview
+    const deletePromises = feedbackQuerySnapshot.docs.map((doc) =>
+      doc.ref.delete()
+    );
+    await Promise.all(deletePromises);
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting interview:", error);
+    return { success: false };
+  }
 }

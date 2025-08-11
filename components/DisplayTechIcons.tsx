@@ -1,9 +1,38 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 import { cn, getTechLogos } from "@/lib/utils";
 
-const DisplayTechIcons = async ({ techStack }: TechIconProps) => {
-  const techIcons = await getTechLogos(techStack);
+const DisplayTechIcons = ({ techStack }: TechIconProps) => {
+  const [techIcons, setTechIcons] = useState<
+    Array<{ tech: string; url: string }>
+  >([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTechIcons = async () => {
+      try {
+        const icons = await getTechLogos(techStack);
+        setTechIcons(icons);
+      } catch (error) {
+        console.error("Error fetching tech icons:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTechIcons();
+  }, [techStack]);
+
+  if (loading) {
+    return (
+      <div className="flex flex-row">
+        <div className="bg-secondary rounded-full p-2 flex flex-center border border-border w-5 h-5 animate-pulse"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-row">
@@ -11,11 +40,13 @@ const DisplayTechIcons = async ({ techStack }: TechIconProps) => {
         <div
           key={tech}
           className={cn(
-            "relative group bg-dark-300 rounded-full p-2 flex flex-center",
+            "relative group bg-secondary rounded-full p-2 flex flex-center border border-border",
             index >= 1 && "-ml-3"
           )}
         >
-          <span className="tech-tooltip">{tech}</span>
+          <span className="tech-tooltip bg-card text-card-foreground border border-border">
+            {tech}
+          </span>
 
           <Image
             src={url}

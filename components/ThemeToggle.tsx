@@ -36,12 +36,12 @@ export default function ThemeToggle({
     return (
       <button
         onClick={handleToggle}
-        className={`${sizeClasses[size]} ${className} rounded-full bg-card hover:bg-accent transition-colors duration-200 flex items-center justify-center border border-border`}
-        aria-label={`Switch to ${theme === "dark" ? "white" : "dark"} mode`}
+        className={`${sizeClasses[size]} ${className} rounded-full bg-card hover:bg-accent transition-all duration-300 flex items-center justify-center border border-border shadow-lg hover:shadow-xl transform hover:scale-105`}
+        aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
       >
         {theme === "dark" ? (
           <svg
-            className={iconSizeClasses[size]}
+            className={`${iconSizeClasses[size]} transition-transform duration-300 hover:rotate-12`}
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -53,7 +53,7 @@ export default function ThemeToggle({
           </svg>
         ) : (
           <svg
-            className={iconSizeClasses[size]}
+            className={`${iconSizeClasses[size]} transition-transform duration-300 hover:rotate-12`}
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -68,13 +68,13 @@ export default function ThemeToggle({
     return (
       <button
         onClick={handleToggle}
-        className={`${className} relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
+        className={`${className} relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-300 ${
           theme === "dark" ? "bg-primary" : "bg-muted"
-        }`}
-        aria-label={`Switch to ${theme === "dark" ? "white" : "dark"} mode`}
+        } shadow-lg hover:shadow-xl`}
+        aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
       >
         <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
+          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-all duration-300 shadow-md ${
             theme === "dark" ? "translate-x-6" : "translate-x-1"
           }`}
         />
@@ -85,13 +85,13 @@ export default function ThemeToggle({
   return (
     <button
       onClick={handleToggle}
-      className={`${sizeClasses[size]} ${className} rounded-full bg-card hover:bg-accent transition-colors duration-200 flex items-center justify-center gap-2 border border-border font-medium`}
-      aria-label={`Switch to ${theme === "dark" ? "white" : "dark"} mode`}
+      className={`${sizeClasses[size]} ${className} rounded-full bg-card hover:bg-accent transition-all duration-300 flex items-center justify-center gap-2 border border-border font-medium shadow-lg hover:shadow-xl transform hover:scale-105`}
+      aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
     >
       {theme === "dark" ? (
         <>
           <svg
-            className={iconSizeClasses[size]}
+            className={`${iconSizeClasses[size]} transition-transform duration-300 hover:rotate-12`}
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -106,7 +106,7 @@ export default function ThemeToggle({
       ) : (
         <>
           <svg
-            className={iconSizeClasses[size]}
+            className={`${iconSizeClasses[size]} transition-transform duration-300 hover:rotate-12`}
             fill="currentColor"
             viewBox="0 0 20 20"
           >

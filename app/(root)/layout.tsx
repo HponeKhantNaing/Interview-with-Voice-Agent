@@ -6,7 +6,6 @@ import { ReactNode, useEffect } from "react";
 import { redirect, useRouter } from "next/navigation";
 
 import { isAuthenticated } from "@/lib/actions/auth.action";
-import ThemeToggle from "@/components/ThemeToggle";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
@@ -20,42 +19,47 @@ const Layout = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <div className="root-layout">
-      <nav className="flex justify-between items-center w-full">
-        {/* <Link href="/" className="flex items-center gap-2"> */}
-        {/* <Image src="/logo.svg" alt="MockMate Logo" width={38} height={32} /> */}
-        {/* <h2 className="text-primary-100">Key2Career</h2> */}
-        {/* </Link> */}
-
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => router.back()}
-            className="inline-flex items-center justify-center rounded-full p-1 hover:bg-gray-900 transition-colors cursor-pointer"
-            aria-label="Back to Home"
-          >
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 40 40"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+    <div
+      className="min-h-screen w-full relative text-gray-800"
+      style={{
+        backgroundImage: `
+        repeating-linear-gradient(0deg, transparent, transparent 5px, rgba(75, 85, 99, 0.06) 5px, rgba(75, 85, 99, 0.06) 6px, transparent 6px, transparent 15px),
+        repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(75, 85, 99, 0.06) 5px, rgba(75, 85, 99, 0.06) 6px, transparent 6px, transparent 15px),
+        repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(107, 114, 128, 0.04) 10px, rgba(107, 114, 128, 0.04) 11px, transparent 11px, transparent 30px),
+        repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(107, 114, 128, 0.04) 10px, rgba(107, 114, 128, 0.04) 11px, transparent 11px, transparent 30px)
+      `,
+      }}
+    >
+      <div className="root-layout relative z-10">
+        <nav className="flex justify-between items-center w-full">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => router.back()}
+              className="inline-flex items-center justify-center rounded-xl p-2 hover:bg-secondary transition-colors cursor-pointer"
+              aria-label="Back to Home"
             >
-              <path d="m25 32-10-12 10-12" />
-            </svg>
-          </button>
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="m25 32-10-12 10-12" />
+              </svg>
+            </button>
+          </div>
 
-          <ThemeToggle variant="icon" size="md" />
-        </div>
+          <span className="text-sm text-foreground font-medium">
+            AI-powered Interview Assistant
+          </span>
+        </nav>
 
-        <span className="text-sm text-light-100 font-medium">
-          AI-powered Interview Assistant
-        </span>
-      </nav>
-
-      {children}
+        {children}
+      </div>
     </div>
   );
 };
